@@ -1,0 +1,32 @@
+name: toolboxes
+description: An app to easily keep track of your tools.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.16.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_translate: ^4.0.2
+  intl: ^0.17.0
+  cupertino_icons: ^1.0.2
+  firebase_core: ^1.11.0
+  cloud_firestore: ^3.1.6
+  firebase_auth: ^3.3.17
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
+  license_generator: ^1.0.2
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/i18n/
