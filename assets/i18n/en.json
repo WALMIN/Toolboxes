@@ -4,5 +4,16 @@
     "title": "Keep track of\nyour tools",
     "log_in": "Log in",
     "sign_up": "Sign up"
+  },
+  "log_in": {
+    "go_back": "Go back",
+    "title": "Let's log you in",
+    "email": "E-mail",
+    "password": "Password",
+    "log_in": "Log in"
+  },
+  "validator": {
+    "field_required": "This field is required",
+    "field_email": "The field is not a valid email address"
   }
 }

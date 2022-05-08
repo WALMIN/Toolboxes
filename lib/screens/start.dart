@@ -4,6 +4,7 @@ import 'package:toolboxes/components/default_button.dart';
 
 import '../utils/palette.dart';
 import '../utils/utils.dart';
+import 'log_in.dart';
 
 class Start extends StatefulWidget {
   const Start({Key? key}) : super(key: key);
@@ -13,7 +14,12 @@ class Start extends StatefulWidget {
 }
 
 class _StartState extends State<Start> {
-  void logIn() {}
+  void logIn() {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const LogIn()),
+        (route) => false);
+  }
 
   void singUp() {}
 
@@ -24,8 +30,7 @@ class _StartState extends State<Start> {
         backgroundColor: Palette.background,
         body: SafeArea(
             child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 12, bottom: 12, left: 24, right: 24),
+                padding: const EdgeInsets.all(16),
                 child: Column(children: [
                   Expanded(
                       child: Column(

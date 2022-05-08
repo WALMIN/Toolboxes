@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
+import 'package:toolboxes/components/default_input.dart';
+import 'package:toolboxes/screens/start.dart';
 
+import '../components/default_button.dart';
+import '../main.dart';
 import '../utils/palette.dart';
 import '../utils/utils.dart';
 
@@ -11,15 +16,104 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  TextEditingController emailEditingController = TextEditingController();
+  TextEditingController passwordEditingController = TextEditingController();
+
+  void validateForm() {
+    if (formKey.currentState!.validate()) {
+      logIn();
+    }
+  }
+
+  void logIn() {}
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: Utils.appBar,
-        backgroundColor: Palette.background,
-        body: SafeArea(
-            child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 12, bottom: 12, left: 24, right: 24),
-                child: Column(children: []))));
+    return WillPopScope(
+        onWillPop: () async {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const Start()),
+              (route) => false);
+          return false;
+        },
+        child: Scaffold(
+            appBar: Utils.appBar,
+            backgroundColor: Palette.background,
+            body: SafeArea(
+                child: Column(children: [
+              Expanded(
+                  child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                                padding:
+                                    const EdgeInsets.only(left: 12, right: 12),
+                                child: IconButton(
+                                  icon: const Icon(Icons.arrow_back,
+                                      color: Palette.onBackground),
+                                  iconSize: 32,
+                                  tooltip: translate("log_in.go_back"),
+                                  onPressed: () {
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => const Main()),
+                                        (route) => false);
+                                  },
+                                )),
+                            Container(
+                                padding: const EdgeInsets.all(24),
+                                child: Column(children: [
+                                  Text(translate("log_in.title"),
+                                      textAlign: TextAlign.left,
+                                      style: const TextStyle(
+                                          color: Palette.onBackground,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 48)),
+                                  Container(
+                                      padding: const EdgeInsets.only(top: 32),
+                                      child: Form(
+                                          key: formKey,
+                                          child: Column(children: [
+                                            DefaultInput(
+                                                label:
+                                                    translate("log_in.email"),
+                                                textEditingController:
+                                                    emailEditingController,
+                                                textInputType:
+                                                    TextInputType.emailAddress,
+                                                formFieldType:
+                                                    FormFieldType.email),
+                                            DefaultInput(
+                                                label: translate(
+                                                    "log_in.password"),
+                                                textEditingController:
+                                                    passwordEditingController,
+                                                textInputType:
+                                                    TextInputType.phone,
+                                                formFieldType:
+                                                    FormFieldType.text)
+                                          ]))),
+                                ]))
+                          ]))),
+              Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 32, left: 32, right: 32),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        DefaultButton(
+                            title: translate("log_in.log_in"),
+                            backgroundColor: Palette.primary,
+                            textColor: Palette.onPrimary,
+                            onPress: validateForm)
+                      ]))
+            ]))));
   }
 }

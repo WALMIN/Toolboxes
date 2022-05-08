@@ -4,5 +4,16 @@
     "title": "Hålla koll på\ndina verktyg",
     "log_in": "Logga in",
     "sign_up": "Registrera dig"
+  },
+  "log_in": {
+    "go_back": "Gå tillbaka",
+    "title": "Let's log you in",
+    "email": "E-post",
+    "password": "Lösenord",
+    "log_in": "Logga in"
+  },
+  "validator": {
+    "field_required": "Detta fält är obligatoriskt",
+    "field_email": "Fältet är inte en giltig e-postadress"
   }
 }
