@@ -53,8 +53,10 @@ class _LogInState extends State<LogIn> {
   }
 
   void showLogInError(String message) {
-    logInError = true;
-    logInErrorMessage = message;
+    setState(() {
+      logInError = true;
+      logInErrorMessage = message;
+    });
   }
 
   @override

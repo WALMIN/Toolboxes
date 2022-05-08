@@ -23,6 +23,9 @@
     "confirm_password": "Confirm password",
     "agree": "I agree with the ",
     "terms_and_privacy": "Terms & Privacy",
+    "password_doesnt_match": "Password doesn't match",
+    "weak_password": "Password is too weak",
+    "email_in_use": "An account already exists with that email",
     "sign_up": "Sign up"
   },
   "validator": {

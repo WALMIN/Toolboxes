@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:toolboxes/screens/start.dart';
@@ -6,6 +8,7 @@ import '../components/default_button.dart';
 import '../components/default_input.dart';
 import '../utils/palette.dart';
 import '../utils/utils.dart';
+import 'home.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -15,6 +18,9 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  late FirebaseAuth firebaseAuth;
+  late FirebaseFirestore firebaseFirestore;
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   TextEditingController firstNameEditingController = TextEditingController();
@@ -26,9 +32,24 @@ class _SignUpState extends State<SignUp> {
   bool termsPrivacy = false;
   bool termsPrivacyError = false;
 
+  bool signUpError = false;
+  String signUpErrorMessage = "";
+
+  @override
+  void initState() {
+    super.initState();
+    firebaseAuth = FirebaseAuth.instance;
+    firebaseFirestore = FirebaseFirestore.instance;
+  }
+
   void validateForm() {
     if (formKey.currentState!.validate() && termsPrivacy) {
-      signUp();
+      if (passwordEditingController.text ==
+          confirmPasswordEditingController.text) {
+        signUp();
+      } else {
+        showSignUpError(translate("sign_up.password_doesnt_match"));
+      }
     }
 
     setState(() {
@@ -36,7 +57,46 @@ class _SignUpState extends State<SignUp> {
     });
   }
 
-  void signUp() {}
+  Future<void> signUp() async {
+    try {
+      await firebaseAuth.createUserWithEmailAndPassword(
+        email: emailEditingController.text,
+        password: passwordEditingController.text,
+      );
+      addUser();
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const Home()),
+          (route) => false);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        showSignUpError(translate("sign_up.weak_password"));
+      } else if (e.code == 'email-already-in-use') {
+        showSignUpError(translate("sign_up.email_in_use"));
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void addUser() {
+    String uid = firebaseAuth.currentUser!.uid ?? "";
+
+    if (uid.isNotEmpty) {
+      final user = <String, dynamic>{
+        "first": firstNameEditingController.text,
+        "email": emailEditingController.text
+      };
+      firebaseFirestore.collection("users").doc(uid).set(user);
+    }
+  }
+
+  void showSignUpError(String message) {
+    setState(() {
+      signUpError = true;
+      signUpErrorMessage = message;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,8 +242,17 @@ class _SignUpState extends State<SignUp> {
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold))
-                                                    ])))
-                                      ])
+                                                    ]))),
+                                      ]),
+                                  if (signUpError)
+                                    Padding(
+                                        padding: const EdgeInsets.only(top: 16),
+                                        child: Text(signUpErrorMessage,
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                                color: Palette.error,
+                                                fontStyle: FontStyle.normal,
+                                                fontSize: 16))),
                                 ]))
                           ]))),
               Padding(

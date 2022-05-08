@@ -23,6 +23,9 @@
     "confirm_password": "Bekräfta lösenord",
     "agree": "Jag godkänner ",
     "terms_and_privacy": "Villkoren & Sekretess",
+    "password_doesnt_match": "Lösenordet matchar inte",
+    "weak_password": "Lösenordet är för svagt",
+    "email_in_use": "Det finns redan ett konto med den e-postadressen",
     "sign_up": "Registrera dig"
   },
   "validator": {
