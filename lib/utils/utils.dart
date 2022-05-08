@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 enum FormFieldType { email, text }
 
@@ -41,6 +42,18 @@ class Utils {
       if (formField == FormFieldType.email) {
         return translate("validator.field_email");
       }
+    }
+  }
+
+  // Open a url
+  static Future<void> openURL(String url, bool openBrowser) async {
+    if (!await launchUrl(
+      Uri.parse(url),
+      mode: openBrowser
+          ? LaunchMode.externalApplication
+          : LaunchMode.inAppWebView,
+    )) {
+      throw 'Could not open $url';
     }
   }
 }

@@ -7,10 +7,21 @@
   },
   "log_in": {
     "go_back": "Gå tillbaka",
-    "title": "Let's log you in",
+    "title": "Låt oss logga in dig",
     "email": "E-post",
     "password": "Lösenord",
     "log_in": "Logga in"
+  },
+  "sign_up": {
+    "go_back": "Gå tillbaka",
+    "title": "Låt oss registrera dig",
+    "first_name": "Förnamn",
+    "email": "E-post",
+    "password": "Lösenord",
+    "confirm_password": "Bekräfta lösenord",
+    "agree": "Jag godkänner ",
+    "terms_and_privacy": "Villkoren & Sekretess",
+    "sign_up": "Registrera dig"
   },
   "validator": {
     "field_required": "Detta fält är obligatoriskt",

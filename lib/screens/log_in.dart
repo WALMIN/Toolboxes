@@ -4,7 +4,6 @@ import 'package:toolboxes/components/default_input.dart';
 import 'package:toolboxes/screens/start.dart';
 
 import '../components/default_button.dart';
-import '../main.dart';
 import '../utils/palette.dart';
 import '../utils/utils.dart';
 
@@ -63,7 +62,8 @@ class _LogInState extends State<LogIn> {
                                     Navigator.pushAndRemoveUntil(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => const Main()),
+                                            builder: (context) =>
+                                                const Start()),
                                         (route) => false);
                                   },
                                 )),
@@ -86,6 +86,7 @@ class _LogInState extends State<LogIn> {
                                                     translate("log_in.email"),
                                                 textEditingController:
                                                     emailEditingController,
+                                                obscureText: false,
                                                 textInputType:
                                                     TextInputType.emailAddress,
                                                 formFieldType:
@@ -95,8 +96,9 @@ class _LogInState extends State<LogIn> {
                                                     "log_in.password"),
                                                 textEditingController:
                                                     passwordEditingController,
+                                                obscureText: true,
                                                 textInputType:
-                                                    TextInputType.phone,
+                                                    TextInputType.text,
                                                 formFieldType:
                                                     FormFieldType.text)
                                           ]))),

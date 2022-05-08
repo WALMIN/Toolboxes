@@ -12,6 +12,17 @@
     "password": "Password",
     "log_in": "Log in"
   },
+  "sign_up": {
+    "go_back": "Go back",
+    "title": "Let's sign you up",
+    "first_name": "First name",
+    "email": "E-mail",
+    "password": "Password",
+    "confirm_password": "Confirm password",
+    "agree": "I agree with the ",
+    "terms_and_privacy": "Terms & Privacy",
+    "sign_up": "Sign up"
+  },
   "validator": {
     "field_required": "This field is required",
     "field_email": "The field is not a valid email address"

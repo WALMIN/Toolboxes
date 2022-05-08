@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:toolboxes/components/default_button.dart';
+import 'package:toolboxes/screens/sign_up.dart';
 
 import '../utils/palette.dart';
 import '../utils/utils.dart';
@@ -21,7 +22,12 @@ class _StartState extends State<Start> {
         (route) => false);
   }
 
-  void singUp() {}
+  void singUp() {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const SignUp()),
+        (route) => false);
+  }
 
   @override
   Widget build(BuildContext context) {

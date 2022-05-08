@@ -7,6 +7,7 @@ import '../utils/utils.dart';
 class DefaultInput extends StatefulWidget {
   final String label;
   final TextEditingController textEditingController;
+  final bool obscureText;
   final TextInputType textInputType;
   final FormFieldType formFieldType;
 
@@ -14,6 +15,7 @@ class DefaultInput extends StatefulWidget {
       {Key? key,
       required this.label,
       required this.textEditingController,
+      required this.obscureText,
       required this.textInputType,
       required this.formFieldType})
       : super(key: key);
@@ -32,6 +34,7 @@ class _DefaultInputState extends State<DefaultInput> {
     return Container(
       padding: const EdgeInsets.only(top: 12),
       child: TextFormField(
+        obscureText: widget.obscureText,
         maxLines: 1,
         autocorrect: true,
         validator: (value) {
