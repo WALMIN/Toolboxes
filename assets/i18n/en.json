@@ -10,6 +10,8 @@
     "title": "Let's log you in",
     "email": "E-mail",
     "password": "Password",
+    "no_user": "No user found",
+    "wrong_password": "Incorrect password",
     "log_in": "Log in"
   },
   "sign_up": {

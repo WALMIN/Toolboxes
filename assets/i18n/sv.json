@@ -10,6 +10,8 @@
     "title": "Låt oss logga in dig",
     "email": "E-post",
     "password": "Lösenord",
+    "no_user": "Ingen användare hittades",
+    "wrong_password": "Fel lösenord",
     "log_in": "Logga in"
   },
   "sign_up": {

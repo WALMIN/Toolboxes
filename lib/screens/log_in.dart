@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:toolboxes/components/default_input.dart';
@@ -6,6 +7,7 @@ import 'package:toolboxes/screens/start.dart';
 import '../components/default_button.dart';
 import '../utils/palette.dart';
 import '../utils/utils.dart';
+import 'home.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key}) : super(key: key);
@@ -20,13 +22,40 @@ class _LogInState extends State<LogIn> {
   TextEditingController emailEditingController = TextEditingController();
   TextEditingController passwordEditingController = TextEditingController();
 
+  bool logInError = false;
+  String logInErrorMessage = "";
+
   void validateForm() {
     if (formKey.currentState!.validate()) {
       logIn();
     }
   }
 
-  void logIn() {}
+  Future<void> logIn() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailEditingController.text,
+          password: passwordEditingController.text);
+
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const Home()),
+          (route) => false);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "user-not-found") {
+        showLogInError(translate("log_in.no_user"));
+      } else if (e.code == "wrong-password") {
+        showLogInError(translate("log_in.wrong_password"));
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void showLogInError(String message) {
+    logInError = true;
+    logInErrorMessage = message;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +129,20 @@ class _LogInState extends State<LogIn> {
                                                 textInputType:
                                                     TextInputType.text,
                                                 formFieldType:
-                                                    FormFieldType.text)
+                                                    FormFieldType.text),
+                                            if (logInError)
+                                              Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 16),
+                                                  child: Text(logInErrorMessage,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: const TextStyle(
+                                                          color: Palette.error,
+                                                          fontStyle:
+                                                              FontStyle.normal,
+                                                          fontSize: 16))),
                                           ]))),
                                 ]))
                           ]))),
