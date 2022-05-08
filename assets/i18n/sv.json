@@ -28,6 +28,9 @@
     "email_in_use": "Det finns redan ett konto med den e-postadressen",
     "sign_up": "Registrera dig"
   },
+  "home": {
+    "welcome": "Välkommen,"
+  },
   "validator": {
     "field_required": "Detta fält är obligatoriskt",
     "field_email": "Fältet är inte en giltig e-postadress"

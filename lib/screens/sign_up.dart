@@ -80,11 +80,11 @@ class _SignUpState extends State<SignUp> {
   }
 
   void addUser() {
-    String uid = firebaseAuth.currentUser!.uid ?? "";
+    String uid = firebaseAuth.currentUser?.uid ?? "";
 
     if (uid.isNotEmpty) {
       final user = <String, dynamic>{
-        "first": firstNameEditingController.text,
+        "firstName": firstNameEditingController.text,
         "email": emailEditingController.text
       };
       firebaseFirestore.collection("users").doc(uid).set(user);

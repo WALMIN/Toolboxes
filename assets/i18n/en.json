@@ -28,6 +28,9 @@
     "email_in_use": "An account already exists with that email",
     "sign_up": "Sign up"
   },
+  "home": {
+    "welcome": "Welcome,"
+  },
   "validator": {
     "field_required": "This field is required",
     "field_email": "The field is not a valid email address"
