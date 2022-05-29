@@ -20,6 +20,9 @@ dependencies:
   cloud_firestore: ^3.1.6
   firebase_auth: ^3.3.17
   url_launcher: ^6.1.0
+  flutter_speed_dial:
+    git:
+      url: https://github.com/WALMIN/flutter_speed_dial
 
 dev_dependencies:
   flutter_test:

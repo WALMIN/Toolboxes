@@ -10,6 +10,7 @@ class DefaultInput extends StatefulWidget {
   final bool obscureText;
   final TextInputType textInputType;
   final FormFieldType formFieldType;
+  final Function onChanged;
 
   const DefaultInput(
       {Key? key,
@@ -17,7 +18,8 @@ class DefaultInput extends StatefulWidget {
       required this.textEditingController,
       required this.obscureText,
       required this.textInputType,
-      required this.formFieldType})
+      required this.formFieldType,
+      required this.onChanged})
       : super(key: key);
 
   @override
@@ -25,10 +27,6 @@ class DefaultInput extends StatefulWidget {
 }
 
 class _DefaultInputState extends State<DefaultInput> {
-  bool loading = false;
-  bool showError = false;
-  String errorMessage = "";
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -46,11 +44,7 @@ class _DefaultInputState extends State<DefaultInput> {
           color: Palette.onBackground,
         ),
         onChanged: (value) {
-          if (showError) {
-            loading = false;
-            showError = false;
-            errorMessage = "";
-          }
+          widget.onChanged();
         },
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(

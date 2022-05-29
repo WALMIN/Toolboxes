@@ -29,10 +29,31 @@
     "sign_up": "Registrera dig"
   },
   "home": {
-    "welcome": "Välkommen,"
+    "welcome": "Välkommen,",
+    "settings": "Inställningar",
+    "add_storage_place": "Lägg till förvaringsplats",
+    "add_tool": "Lägg till verktyg"
+  },
+  "add_storage_place": {
+    "title": "Lägg till förvaringsplats",
+    "place": "Plats",
+    "add": "Lägg till",
+    "successfully_added": "Lagringsplatsen har lagts till",
+    "failed_to_add": "Det gick inte att lägga till lagringsplatsen, försök igen senare"
+  },
+  "add_tool": {
+    "title": "Lägg till verktyg",
+    "name": "Namn",
+    "bought_at": "Köpt på",
+    "bought": "Köpt",
+    "storage_place": "Förvaringsplats",
+    "add": "Lägg till",
+    "successfully_added": "Verktyget har lagts till.",
+    "failed_to_add": "Det gick inte att lägga till verktyget, försök igen senare!"
   },
   "validator": {
     "field_required": "Detta fält är obligatoriskt",
-    "field_email": "Fältet är inte en giltig e-postadress"
+    "field_email": "Fältet är inte en giltig e-postadress",
+    "field_date": "Fältet är inte ett giltigt datum"
   }
 }

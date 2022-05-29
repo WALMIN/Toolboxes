@@ -22,7 +22,6 @@ class _SignUpState extends State<SignUp> {
   late FirebaseFirestore firebaseFirestore;
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
   TextEditingController firstNameEditingController = TextEditingController();
   TextEditingController emailEditingController = TextEditingController();
   TextEditingController passwordEditingController = TextEditingController();
@@ -160,7 +159,8 @@ class _SignUpState extends State<SignUp> {
                                                 textInputType:
                                                     TextInputType.name,
                                                 formFieldType:
-                                                    FormFieldType.text),
+                                                    FormFieldType.text,
+                                                onChanged: () {}),
                                             DefaultInput(
                                                 label:
                                                     translate("sign_up.email"),
@@ -170,7 +170,8 @@ class _SignUpState extends State<SignUp> {
                                                 textInputType:
                                                     TextInputType.emailAddress,
                                                 formFieldType:
-                                                    FormFieldType.email),
+                                                    FormFieldType.email,
+                                                onChanged: () {}),
                                             DefaultInput(
                                                 label: translate(
                                                     "sign_up.password"),
@@ -180,7 +181,8 @@ class _SignUpState extends State<SignUp> {
                                                 textInputType:
                                                     TextInputType.text,
                                                 formFieldType:
-                                                    FormFieldType.text),
+                                                    FormFieldType.text,
+                                                onChanged: () {}),
                                             DefaultInput(
                                                 label: translate(
                                                     "sign_up.confirm_password"),
@@ -190,7 +192,8 @@ class _SignUpState extends State<SignUp> {
                                                 textInputType:
                                                     TextInputType.text,
                                                 formFieldType:
-                                                    FormFieldType.text)
+                                                    FormFieldType.text,
+                                                onChanged: () {})
                                           ]))),
                                   Row(
                                       mainAxisAlignment:

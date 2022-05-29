@@ -18,7 +18,6 @@ class LogIn extends StatefulWidget {
 
 class _LogInState extends State<LogIn> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
   TextEditingController emailEditingController = TextEditingController();
   TextEditingController passwordEditingController = TextEditingController();
 
@@ -121,7 +120,8 @@ class _LogInState extends State<LogIn> {
                                                 textInputType:
                                                     TextInputType.emailAddress,
                                                 formFieldType:
-                                                    FormFieldType.email),
+                                                    FormFieldType.email,
+                                                onChanged: () {}),
                                             DefaultInput(
                                                 label: translate(
                                                     "log_in.password"),
@@ -131,7 +131,8 @@ class _LogInState extends State<LogIn> {
                                                 textInputType:
                                                     TextInputType.text,
                                                 formFieldType:
-                                                    FormFieldType.text),
+                                                    FormFieldType.text,
+                                                onChanged: () {}),
                                             if (logInError)
                                               Padding(
                                                   padding:

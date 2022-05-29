@@ -29,10 +29,31 @@
     "sign_up": "Sign up"
   },
   "home": {
-    "welcome": "Welcome,"
+    "welcome": "Welcome,",
+    "settings": "Settings",
+    "add_storage_place": "Add storage place",
+    "add_tool": "Add tool"
+  },
+  "add_storage_place": {
+    "title": "Add storage place",
+    "place": "Place",
+    "add": "Add",
+    "successfully_added": "Successfully added the storage place",
+    "failed_to_add": "Failed to add storage place, try again later"
+  },
+  "add_tool": {
+    "title": "Add a tool",
+    "name": "Name",
+    "bought_at": "Bought at",
+    "bought": "Bought",
+    "storage_place": "Storage place",
+    "add": "Add",
+    "successfully_added": "Successfully added the tool.",
+    "failed_to_add": "Failed to add the tool, try again later!"
   },
   "validator": {
     "field_required": "This field is required",
-    "field_email": "The field is not a valid email address"
+    "field_email": "The field is not a valid email address",
+    "field_date": "The field is not a valid date"
   }
 }
