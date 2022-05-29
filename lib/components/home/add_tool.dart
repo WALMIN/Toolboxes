@@ -59,7 +59,8 @@ class _AddToolState extends State<AddTool> {
         "name": nameEditingController.text,
         "bought_at": boughtAtEditingController.text,
         "bought": boughtEditingController.text,
-        "storage_place": placeEditingController.text
+        "storage_place": placeEditingController.text,
+        "borrowed": false
       };
       firebaseFirestore
           .collection("users")

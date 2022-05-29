@@ -30,6 +30,7 @@
   },
   "home": {
     "welcome": "Welcome,",
+    "all": "All",
     "settings": "Settings",
     "add_storage_place": "Add storage place",
     "add_tool": "Add tool"

@@ -30,6 +30,7 @@
   },
   "home": {
     "welcome": "Välkommen,",
+    "all": "Allt",
     "settings": "Inställningar",
     "add_storage_place": "Lägg till förvaringsplats",
     "add_tool": "Lägg till verktyg"
