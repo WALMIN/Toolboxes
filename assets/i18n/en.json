@@ -31,6 +31,7 @@
   "home": {
     "welcome": "Welcome,",
     "all": "All",
+    "no_tools": "No tools added yet, add your first one below!",
     "settings": "Settings",
     "add_storage_place": "Add storage place",
     "add_tool": "Add tool"
@@ -42,19 +43,41 @@
     "successfully_added": "Successfully added the storage place",
     "failed_to_add": "Failed to add storage place, try again later"
   },
-  "add_tool": {
-    "title": "Add a tool",
+  "add_edit_tool": {
+    "add_tool": "Add a tool",
+    "edit_tool": "Edit a tool",
     "name": "Name",
-    "bought_at": "Bought at",
-    "bought": "Bought",
     "storage_place": "Storage place",
+    "bought": "Bought",
+    "bought_at": "Bought at",
+    "borrowed_at": "Borrowed at",
+    "borrowed_by": "Borrowed by",
     "add": "Add",
+    "save": "Save",
     "successfully_added": "Successfully added the tool.",
-    "failed_to_add": "Failed to add the tool, try again later!"
+    "failed_to_add": "Failed to add the tool, try again later!",
+    "successfully_updated": "Successfully updated the tool.",
+    "failed_to_update": "Failed to update the tool, try again later!"
+  },
+  "view_tool": {
+    "storage_place": "Storage place",
+    "bought": "Bought",
+    "bought_at": "Bought at",
+    "borrowed_at": "Borrowed at",
+    "borrowed_by": "Borrowed by",
+    "edit": "Edit",
+    "delete": "Delete",
+    "successfully_deleted": "Successfully deleted the tool."
+  },
+  "title_text_item": {
+    "empty": "..."
   },
   "validator": {
     "field_required": "This field is required",
     "field_email": "The field is not a valid email address",
     "field_date": "The field is not a valid date"
+  },
+  "message": {
+    "error_loading" : "An error occurred, please try again"
   }
 }

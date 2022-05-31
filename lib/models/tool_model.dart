@@ -1,14 +1,18 @@
 class ToolModel {
-  String bought;
-  String boughtAt;
+  String id;
   String name;
   String storagePlace;
-  bool borrowed;
+  String borrowedBy;
+  String borrowedAt;
+  String bought;
+  String boughtAt;
 
   ToolModel(
-      {required this.bought,
-      required this.boughtAt,
+      {required this.id,
       required this.name,
       required this.storagePlace,
-      required this.borrowed});
+      required this.borrowedBy,
+      required this.borrowedAt,
+      required this.bought,
+      required this.boughtAt});
 }

@@ -24,7 +24,11 @@ class Utils {
 
   // Capitalize first letter
   static String capitalize(String input) {
-    return "${input[0].toUpperCase()}${input.substring(1)}";
+    if (input.trim().isNotEmpty) {
+      return "${input[0].toUpperCase()}${input.substring(1)}";
+    } else {
+      return "";
+    }
   }
 
   // Validate field with regex
@@ -80,11 +84,11 @@ class Utils {
   static Future<String> showDatePickerDialog(
       BuildContext context, DateTime dateTime) async {
     final DateTime? dateTimePicked = await showDatePicker(
-      context: context,
-      initialDate: dateTime,
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
-    );
+        context: context,
+        initialDate: dateTime,
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2100),
+        locale: Locale(Localizations.localeOf(context).languageCode));
     String date =
         "${dateTime.toLocal().year}-${dateTime.toLocal().month < 10 ? "0" : ""}${dateTime.toLocal().month}-${dateTime.toLocal().day < 10 ? "0" : ""}${dateTime.toLocal().day}";
 

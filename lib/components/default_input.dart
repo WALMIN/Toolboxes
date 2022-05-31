@@ -11,6 +11,7 @@ class DefaultInput extends StatefulWidget {
   final TextInputType textInputType;
   final FormFieldType formFieldType;
   final Function onChanged;
+  final bool required;
 
   const DefaultInput(
       {Key? key,
@@ -19,7 +20,8 @@ class DefaultInput extends StatefulWidget {
       required this.obscureText,
       required this.textInputType,
       required this.formFieldType,
-      required this.onChanged})
+      required this.onChanged,
+      required this.required})
       : super(key: key);
 
   @override
@@ -36,7 +38,8 @@ class _DefaultInputState extends State<DefaultInput> {
         maxLines: 1,
         autocorrect: true,
         validator: (value) {
-          return Utils.validateField(true, value, widget.formFieldType);
+          return Utils.validateField(
+              widget.required, value, widget.formFieldType);
         },
         controller: widget.textEditingController,
         keyboardType: widget.textInputType,
@@ -44,7 +47,9 @@ class _DefaultInputState extends State<DefaultInput> {
           color: Palette.onBackground,
         ),
         onChanged: (value) {
-          widget.onChanged();
+          setState(() {
+            widget.onChanged();
+          });
         },
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(

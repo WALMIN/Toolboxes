@@ -108,7 +108,8 @@ class _AddStoragePlaceState extends State<AddStoragePlace> {
                       setState(() {
                         showError = false;
                       });
-                    })),
+                    },
+                    required: true)),
           ),
           Padding(
               padding: const EdgeInsets.only(top: 32),

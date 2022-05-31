@@ -121,7 +121,8 @@ class _LogInState extends State<LogIn> {
                                                     TextInputType.emailAddress,
                                                 formFieldType:
                                                     FormFieldType.email,
-                                                onChanged: () {}),
+                                                onChanged: () {},
+                                                required: true),
                                             DefaultInput(
                                                 label: translate(
                                                     "log_in.password"),
@@ -132,7 +133,8 @@ class _LogInState extends State<LogIn> {
                                                     TextInputType.text,
                                                 formFieldType:
                                                     FormFieldType.text,
-                                                onChanged: () {}),
+                                                onChanged: () {},
+                                                required: true),
                                             if (logInError)
                                               Padding(
                                                   padding:

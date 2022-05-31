@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:toolboxes/components/home/add_tool.dart';
+import 'package:toolboxes/components/home/add_edit_tool.dart';
 import 'package:toolboxes/components/home/tool_item.dart';
 import 'package:toolboxes/models/tool_model.dart';
 
@@ -24,9 +24,10 @@ class _HomeState extends State<Home> {
 
   ValueNotifier<bool> isSpeedDialOpen = ValueNotifier(false);
 
-  String currentStoragePlace = "all";
+  int currentStoragePlace = 0;
 
   List<String> storagePlaces = [];
+  List<ToolModel> allTools = [];
   List<ToolModel> tools = [];
 
   @override
@@ -59,15 +60,20 @@ class _HomeState extends State<Home> {
         .collection("tools")
         .get();
     for (var document in querySnapshot.docs) {
-      tools.add(ToolModel(
-          bought: document["bought"],
-          boughtAt: document["bought_at"],
-          name: document["name"],
-          storagePlace: document["storage_place"],
-          borrowed: document["borrowed"]));
+      tools.add(
+        ToolModel(
+            id: document.id,
+            name: document["name"],
+            storagePlace: document["storage_place"],
+            borrowedBy: document["borrowed_by"],
+            borrowedAt: document["borrowed_at"],
+            bought: document["bought"],
+            boughtAt: document["bought_at"]),
+      );
     }
 
     tools.sort((a, b) => (a.name).compareTo(b.name));
+    allTools = tools;
   }
 
   @override
@@ -76,97 +82,123 @@ class _HomeState extends State<Home> {
         appBar: Utils.appBar,
         backgroundColor: Palette.background,
         body: SafeArea(
-            child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-          stream: FirebaseFirestore.instance
-              .collection("users")
-              .doc(firebaseAuth.currentUser?.uid)
-              .snapshots(),
-          builder: (_, snapshot) {
-            if (snapshot.hasError) {
-              return const Text("Error loading, try again!",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Palette.onBackground,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      overflow: TextOverflow.clip));
-            }
+          child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+            stream: firebaseFirestore
+                .collection("users")
+                .doc(firebaseAuth.currentUser?.uid)
+                .snapshots(),
+            builder: (_, snapshot) {
+              if (snapshot.hasError) {
+                return Text(translate("message.error_loading"),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        color: Palette.onBackground,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.clip));
+              }
 
-            if (snapshot.hasData) {
-              Map<String, dynamic>? data = snapshot.data!.data()!;
+              if (snapshot.hasData) {
+                Map<String, dynamic>? data = snapshot.data!.data()!;
 
-              return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(translate("home.welcome"),
-                              textAlign: TextAlign.left,
-                              style: const TextStyle(
-                                  color: Palette.onBackground, fontSize: 24)),
-                          Text(data['firstName'],
-                              textAlign: TextAlign.left,
-                              style: const TextStyle(
-                                  color: Palette.onBackground,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 24)),
-                        ]),
-                    tools.isNotEmpty
-                        ? Column(children: [
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(children: [
-                                for (var place in storagePlaces)
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      primary: Palette.background,
-                                      onPrimary:
-                                          (currentStoragePlace.toLowerCase() ==
-                                                  place.toLowerCase())
-                                              ? Palette.primary
-                                              : Palette.onBackground,
-                                      textStyle: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: (currentStoragePlace
-                                                      .toLowerCase() ==
-                                                  place.toLowerCase())
-                                              ? FontWeight.bold
-                                              : FontWeight.normal),
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        currentStoragePlace = place;
-                                      });
-                                    },
-                                    child: Text(Utils.capitalize(place)),
+                return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(translate("home.welcome"),
+                                    textAlign: TextAlign.left,
+                                    style: const TextStyle(
+                                        color: Palette.onBackground,
+                                        fontSize: 24)),
+                                Text(data['firstName'],
+                                    textAlign: TextAlign.left,
+                                    style: const TextStyle(
+                                        color: Palette.onBackground,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 24)),
+                              ])),
+                      Column(children: [
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(children: [
+                            for (var i = 0; i < storagePlaces.length; i++)
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Palette.background,
+                                  onPrimary: currentStoragePlace == i
+                                      ? Palette.primary
+                                      : Palette.onBackground,
+                                  textStyle: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: currentStoragePlace == i
+                                          ? FontWeight.bold
+                                          : FontWeight.normal),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    currentStoragePlace = i;
+
+                                    if (i > 0) {
+                                      tools = allTools
+                                          .where((tool) =>
+                                              tool.storagePlace.toLowerCase() ==
+                                              storagePlaces[i].toLowerCase())
+                                          .toList();
+                                    } else {
+                                      tools = allTools.toList();
+                                    }
+                                  });
+                                },
+                                child: Text(Utils.capitalize(storagePlaces[i])),
+                              ),
+                          ]),
+                        ),
+                        (tools.isNotEmpty && allTools.isNotEmpty)
+                            ? GridView.count(
+                                shrinkWrap: true,
+                                crossAxisCount: 2,
+                                childAspectRatio: 8 / 5,
+                                children: List.generate(tools.length, (index) {
+                                  return ToolItem(toolModel: tools[index]);
+                                }),
+                              )
+                            : Padding(
+                                padding: EdgeInsets.only(
+                                    top: MediaQuery.of(context).size.height *
+                                        0.2,
+                                    left: 12,
+                                    right: 12),
+                                child: Center(
+                                    child: Column(children: [
+                                  const Icon(
+                                    Icons.handyman_outlined,
+                                    color: Palette.onBackground,
+                                    size: 96,
                                   ),
-                              ]),
-                            ),
-                            GridView.count(
-                              shrinkWrap: true,
-                              crossAxisCount: 2,
-                              childAspectRatio: 8 / 5,
-                              children: List.generate(
-                                  (currentStoragePlace.toLowerCase() == "all")
-                                      ? tools.length
-                                      : tools
-                                          .where((tool) => (tool.storagePlace
-                                                  .toLowerCase() ==
-                                              currentStoragePlace
-                                                  .toLowerCase()))
-                                          .length, (index) {
-                                return ToolItem(toolModel: tools[index]);
-                              }),
-                            ),
-                          ])
-                        : const Center(child: CircularProgressIndicator())
-                  ]);
-            }
+                                  Padding(
+                                      padding: const EdgeInsets.only(top: 32),
+                                      child: Text(translate("home.no_tools"),
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                              color: Palette.onSurface,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20)))
+                                ])))
+                      ])
+                    ]);
+              }
 
-            return const Center(child: CircularProgressIndicator());
-          },
-        )),
+              return Padding(
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.2),
+                  child: const Center(child: CircularProgressIndicator()));
+            },
+          ),
+        ),
         floatingActionButton: floatingActionButton());
   }
 
@@ -228,7 +260,16 @@ class _HomeState extends State<Home> {
                             padding: EdgeInsets.only(
                                 bottom:
                                     MediaQuery.of(context).viewInsets.bottom),
-                            child: const AddTool()));
+                            child: AddEditTool(
+                                toolModel: ToolModel(
+                                    id: "",
+                                    name: "",
+                                    storagePlace: "",
+                                    borrowedBy: "",
+                                    borrowedAt: "",
+                                    bought: "",
+                                    boughtAt: ""),
+                                edit: false)));
                   },
                 );
               })

@@ -8,8 +8,9 @@ class Palette {
   static const Color background = Color(0xFF050406);
   static const Color onBackground = Color(0xFFFFFFFF);
 
-  static const Color surface = Color(0xFF1D1D1E);
-  static const Color onSurface = Color(0xFFFFFFFF);
+  static const Color surface = Color(0xFF212121);
+  static const Color onSurface = Color(0xFFFAFAFA);
+  static const Color onSurfaceSecondary = Color(0xFFF5F5F5);
 
   static const Color error = Colors.redAccent;
 

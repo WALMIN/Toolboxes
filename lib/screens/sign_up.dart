@@ -160,7 +160,8 @@ class _SignUpState extends State<SignUp> {
                                                     TextInputType.name,
                                                 formFieldType:
                                                     FormFieldType.text,
-                                                onChanged: () {}),
+                                                onChanged: () {},
+                                                required: true),
                                             DefaultInput(
                                                 label:
                                                     translate("sign_up.email"),
@@ -171,7 +172,8 @@ class _SignUpState extends State<SignUp> {
                                                     TextInputType.emailAddress,
                                                 formFieldType:
                                                     FormFieldType.email,
-                                                onChanged: () {}),
+                                                onChanged: () {},
+                                                required: true),
                                             DefaultInput(
                                                 label: translate(
                                                     "sign_up.password"),
@@ -182,7 +184,8 @@ class _SignUpState extends State<SignUp> {
                                                     TextInputType.text,
                                                 formFieldType:
                                                     FormFieldType.text,
-                                                onChanged: () {}),
+                                                onChanged: () {},
+                                                required: true),
                                             DefaultInput(
                                                 label: translate(
                                                     "sign_up.confirm_password"),
@@ -193,7 +196,8 @@ class _SignUpState extends State<SignUp> {
                                                     TextInputType.text,
                                                 formFieldType:
                                                     FormFieldType.text,
-                                                onChanged: () {})
+                                                onChanged: () {},
+                                                required: true)
                                           ]))),
                                   Row(
                                       mainAxisAlignment:
