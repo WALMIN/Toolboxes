@@ -7,6 +7,7 @@ import '../utils/utils.dart';
 class DefaultInput extends StatefulWidget {
   final String label;
   final TextEditingController textEditingController;
+  final String initialValue;
   final bool obscureText;
   final TextInputType textInputType;
   final FormFieldType formFieldType;
@@ -17,6 +18,7 @@ class DefaultInput extends StatefulWidget {
       {Key? key,
       required this.label,
       required this.textEditingController,
+      required this.initialValue,
       required this.obscureText,
       required this.textInputType,
       required this.formFieldType,
@@ -29,6 +31,12 @@ class DefaultInput extends StatefulWidget {
 }
 
 class _DefaultInputState extends State<DefaultInput> {
+  @override
+  void initState() {
+    super.initState();
+    widget.textEditingController.text = widget.initialValue;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(

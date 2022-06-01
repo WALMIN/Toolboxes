@@ -57,7 +57,7 @@
     "successfully_added": "Verktyget har lagts till.",
     "failed_to_add": "Det gick inte att lägga till verktyget, försök igen senare!",
     "successfully_updated": "Verktyget har uppdaterats.",
-    "failed_to_update": "Det gick inte att uppdatera verktyget, försök igen senare!",
+    "failed_to_update": "Det gick inte att uppdatera verktyget, försök igen senare!"
   },
   "view_tool": {
     "storage_place": "Förvaringsplats",
@@ -71,6 +71,26 @@
   },
   "title_text_item": {
     "empty": "..."
+  },
+  "settings": {
+    "go_back": "Gå tillbaka",
+    "title": "Inställningar",
+    "general": "Allmänt",
+    "edit_account": "Ändra kontoinställningar",
+    "about": "Om",
+    "licenses": "Licenser",
+    "privacy_policy": "Integritetspolicy"
+  },
+  "edit_account": {
+    "title": "Ändra kontoinställningar",
+    "first_name": "Förnamn",
+    "email": "E-post",
+    "current_password": "Nuvarande lösenord",
+    "new_password": "Nytt lösenord",
+    "confirm_new_password": "Bekräfta nytt lösenord",
+    "save": "Spara",
+    "successfully_updated": "Ditt konto har uppdaterats .",
+    "failed_to_update": "Det gick inte att uppdatera ditt konto, försök igen senare!"
   },
   "validator": {
     "field_required": "Detta fält är obligatoriskt",

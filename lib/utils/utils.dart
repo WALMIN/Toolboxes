@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:toolboxes/utils/palette.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 enum FormFieldType { email, text, date }
@@ -10,6 +11,7 @@ class Utils {
   static AppBar appBar = AppBar(
       toolbarHeight: 0,
       systemOverlayStyle: const SystemUiOverlayStyle(
+        statusBarColor: Palette.background,
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.dark,
       ));

@@ -155,6 +155,7 @@ class _SignUpState extends State<SignUp> {
                                                     "sign_up.first_name"),
                                                 textEditingController:
                                                     firstNameEditingController,
+                                                initialValue: "",
                                                 obscureText: false,
                                                 textInputType:
                                                     TextInputType.name,
@@ -167,6 +168,7 @@ class _SignUpState extends State<SignUp> {
                                                     translate("sign_up.email"),
                                                 textEditingController:
                                                     emailEditingController,
+                                                initialValue: "",
                                                 obscureText: false,
                                                 textInputType:
                                                     TextInputType.emailAddress,
@@ -179,6 +181,7 @@ class _SignUpState extends State<SignUp> {
                                                     "sign_up.password"),
                                                 textEditingController:
                                                     passwordEditingController,
+                                                initialValue: "",
                                                 obscureText: true,
                                                 textInputType:
                                                     TextInputType.text,
@@ -191,6 +194,7 @@ class _SignUpState extends State<SignUp> {
                                                     "sign_up.confirm_password"),
                                                 textEditingController:
                                                     confirmPasswordEditingController,
+                                                initialValue: "",
                                                 obscureText: true,
                                                 textInputType:
                                                     TextInputType.text,

@@ -6,6 +6,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:toolboxes/components/home/add_edit_tool.dart';
 import 'package:toolboxes/components/home/tool_item.dart';
 import 'package:toolboxes/models/tool_model.dart';
+import 'package:toolboxes/screens/settings.dart';
 
 import '../components/home/add_storage_place.dart';
 import '../utils/palette.dart';
@@ -105,7 +106,8 @@ class _HomeState extends State<Home> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                          padding: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.only(
+                              top: 24, bottom: 18, left: 24, right: 24),
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -221,6 +223,12 @@ class _HomeState extends State<Home> {
                 setState(() {
                   isSpeedDialOpen.value = false;
                 });
+
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SettingsPage()),
+                    (route) => false);
               }),
           SpeedDialChild(
               child: const Icon(Icons.place_outlined),

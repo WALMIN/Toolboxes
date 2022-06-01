@@ -116,6 +116,7 @@ class _LogInState extends State<LogIn> {
                                                     translate("log_in.email"),
                                                 textEditingController:
                                                     emailEditingController,
+                                                initialValue: "",
                                                 obscureText: false,
                                                 textInputType:
                                                     TextInputType.emailAddress,
@@ -128,6 +129,7 @@ class _LogInState extends State<LogIn> {
                                                     "log_in.password"),
                                                 textEditingController:
                                                     passwordEditingController,
+                                                initialValue: "",
                                                 obscureText: true,
                                                 textInputType:
                                                     TextInputType.text,

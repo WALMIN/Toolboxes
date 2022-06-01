@@ -57,7 +57,7 @@ class _AddEditToolState extends State<AddEditTool> {
 
   void validateForm() {
     if (formKey.currentState!.validate() && place) {
-      addTool();
+      addEditTool();
     }
 
     setState(() {
@@ -65,7 +65,7 @@ class _AddEditToolState extends State<AddEditTool> {
     });
   }
 
-  Future<void> addTool() async {
+  Future<void> addEditTool() async {
     String uid = firebaseAuth.currentUser?.uid ?? "";
 
     if (uid.isNotEmpty) {
@@ -165,6 +165,7 @@ class _AddEditToolState extends State<AddEditTool> {
                     DefaultInput(
                         label: translate("add_edit_tool.name"),
                         textEditingController: nameEditingController,
+                        initialValue: "",
                         obscureText: false,
                         textInputType: TextInputType.text,
                         formFieldType: FormFieldType.text,
@@ -177,6 +178,7 @@ class _AddEditToolState extends State<AddEditTool> {
                     DefaultInput(
                         label: translate("add_edit_tool.bought_at"),
                         textEditingController: boughtAtEditingController,
+                        initialValue: "",
                         obscureText: false,
                         textInputType: TextInputType.text,
                         formFieldType: FormFieldType.text,
@@ -340,6 +342,7 @@ class _AddEditToolState extends State<AddEditTool> {
                         ? DefaultInput(
                             label: translate("add_edit_tool.borrowed_by"),
                             textEditingController: borrowedByEditingController,
+                            initialValue: "",
                             obscureText: false,
                             textInputType: TextInputType.text,
                             formFieldType: FormFieldType.text,

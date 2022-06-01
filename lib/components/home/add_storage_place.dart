@@ -101,6 +101,7 @@ class _AddStoragePlaceState extends State<AddStoragePlace> {
                 child: DefaultInput(
                     label: translate("add_storage_place.place"),
                     textEditingController: placeEditingController,
+                    initialValue: "",
                     obscureText: false,
                     textInputType: TextInputType.text,
                     formFieldType: FormFieldType.text,

@@ -72,6 +72,26 @@
   "title_text_item": {
     "empty": "..."
   },
+  "settings": {
+    "go_back": "Go back",
+    "title": "Settings",
+    "general": "General",
+    "edit_account": "Edit account",
+    "about": "About",
+    "licenses": "Licenses",
+    "privacy_policy": "Privacy policy"
+  },
+  "edit_account": {
+    "title": "Edit account",
+    "first_name": "First name",
+    "email": "E-mail",
+    "current_password": "Current password",
+    "new_password": "New password",
+    "confirm_new_password": "Confirm new password",
+    "save": "Save",
+    "successfully_updated": "Successfully updated your account.",
+    "failed_to_update": "Failed to update your account, try again later!"
+  },
   "validator": {
     "field_required": "This field is required",
     "field_email": "The field is not a valid email address",
