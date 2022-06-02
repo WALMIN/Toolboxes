@@ -30,18 +30,33 @@
   },
   "home": {
     "welcome": "Welcome,",
+    "sign_out": "Sign out",
     "all": "All",
-    "no_tools": "No tools added yet, add your first one below!",
+    "no_tools": "No tools added yet.\nAdd your first storage place\nand tool below!",
     "settings": "Settings",
     "add_storage_place": "Add storage place",
     "add_tool": "Add tool"
+  },
+  "sign_out": {
+    "title": "Sign out",
+    "content": "Are you really sure you want to sign out?",
+    "negative_btn": "Cancel",
+    "positive_btn": "Yes, sign out"
   },
   "add_storage_place": {
     "title": "Add storage place",
     "place": "Place",
     "add": "Add",
-    "successfully_added": "Successfully added the storage place",
-    "failed_to_add": "Failed to add storage place, try again later"
+    "successfully_added": "Successfully added the storage place.",
+    "failed_to_add": "Failed to add storage place, try again later!"
+  },
+  "delete_storage_place": {
+    "title": "Delete [NAME]",
+    "content": "Are your really sure you want to delete this storage place?",
+    "negative_btn": "Cancel",
+    "positive_btn": "Yes, delete",
+    "successfully_deleted": "Successfully deleted the storage place.",
+    "failed_to_delete": "Failed to delete the storage place, try again later!"
   },
   "add_edit_tool": {
     "add_tool": "Add a tool",
@@ -67,7 +82,8 @@
     "borrowed_by": "Borrowed by",
     "edit": "Edit",
     "delete": "Delete",
-    "successfully_deleted": "Successfully deleted the tool."
+    "successfully_deleted": "Successfully deleted the tool.",
+    "failed_to_delete": "Failed to delete the tool, try again later!"
   },
   "title_text_item": {
     "empty": "..."
@@ -85,9 +101,13 @@
     "title": "Edit account",
     "first_name": "First name",
     "email": "E-mail",
+    "change_password": "Change password",
     "current_password": "Current password",
     "new_password": "New password",
     "confirm_new_password": "Confirm new password",
+    "password_does_not_match": "New password & confirm new password does not match",
+    "weak_password": "Password is too weak",
+    "wrong_password": "Incorrect password",
     "save": "Save",
     "successfully_updated": "Successfully updated your account.",
     "failed_to_update": "Failed to update your account, try again later!"

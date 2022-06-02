@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:toolboxes/components/settings/change_password.dart';
 
 import '../../utils/palette.dart';
 import '../../utils/utils.dart';
@@ -22,11 +23,6 @@ class _EditAccountState extends State<EditAccount> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController firstNameEditingController = TextEditingController();
   TextEditingController emailEditingController = TextEditingController();
-  TextEditingController currentPasswordEditingController =
-      TextEditingController();
-  TextEditingController newPasswordEditingController = TextEditingController();
-  TextEditingController confirmNewPasswordEditingController =
-      TextEditingController();
 
   bool showLoading = false;
   bool showError = false;
@@ -41,6 +37,9 @@ class _EditAccountState extends State<EditAccount> {
 
   void validateForm() {
     if (formKey.currentState!.validate()) {
+      setState(() {
+        showLoading = true;
+      });
       updateAccount();
     }
   }
@@ -48,20 +47,19 @@ class _EditAccountState extends State<EditAccount> {
   Future<void> updateAccount() async {
     String uid = firebaseAuth.currentUser?.uid ?? "";
 
-    debugPrint("Name: " + firstNameEditingController.text);
-
     if (uid.isNotEmpty) {
       await firebaseFirestore.collection("users").doc(uid).update({
         "firstName": firstNameEditingController.text,
         "email": emailEditingController.text
       }).then((value) {
+        firebaseAuth.currentUser?.updateEmail(emailEditingController.text);
+
         Navigator.pop(context);
         Utils.showSnackBar(
             context, translate("edit_account.successfully_updated"));
       }).catchError((error) {
         setState(() {
           showLoading = false;
-
           showError = true;
           errorMessage = translate("edit_account.failed_to_update");
         });
@@ -131,48 +129,36 @@ class _EditAccountState extends State<EditAccount> {
                           });
                         },
                         required: true),
-                    DefaultInput(
-                        label: translate("edit_account.current_password"),
-                        textEditingController: currentPasswordEditingController,
-                        initialValue: "",
-                        obscureText: true,
-                        textInputType: TextInputType.text,
-                        formFieldType: FormFieldType.text,
-                        onChanged: () {
-                          setState(() {
-                            showError = false;
-                          });
-                        },
-                        required: false),
-                    DefaultInput(
-                        label: translate("edit_account.new_password"),
-                        textEditingController: newPasswordEditingController,
-                        initialValue: "",
-                        obscureText: true,
-                        textInputType: TextInputType.text,
-                        formFieldType: FormFieldType.text,
-                        onChanged: () {
-                          setState(() {
-                            showError = false;
-                          });
-                        },
-                        required: false),
-                    DefaultInput(
-                        label: translate("edit_account.confirm_new_password"),
-                        textEditingController:
-                            confirmNewPasswordEditingController,
-                        initialValue: "",
-                        obscureText: true,
-                        textInputType: TextInputType.text,
-                        formFieldType: FormFieldType.text,
-                        onChanged: () {
-                          setState(() {
-                            showError = false;
-                          });
-                        },
-                        required: false),
                   ]),
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      DefaultButton(
+                          title: translate("edit_account.change_password"),
+                          backgroundColor: Palette.onSurface,
+                          textColor: Palette.primary,
+                          onPress: () {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (BuildContext context) {
+                                return SingleChildScrollView(
+                                    child: Container(
+                                        padding: EdgeInsets.only(
+                                            bottom: MediaQuery.of(context)
+                                                .viewInsets
+                                                .bottom),
+                                        child: ChangePassword(
+                                            email:
+                                                emailEditingController.text)));
+                              },
+                            );
+                          })
+                    ]),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 32),

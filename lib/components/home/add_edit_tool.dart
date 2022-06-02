@@ -12,9 +12,8 @@ import '../default_input.dart';
 class AddEditTool extends StatefulWidget {
   final ToolModel toolModel;
   final bool edit;
-  final Function completed;
 
-  const AddEditTool({Key? key, required this.toolModel, required this.edit, required this.completed})
+  const AddEditTool({Key? key, required this.toolModel, required this.edit})
       : super(key: key);
 
   @override
@@ -33,7 +32,6 @@ class _AddEditToolState extends State<AddEditTool> {
   TextEditingController borrowedByEditingController = TextEditingController();
   TextEditingController borrowedAtEditingController = TextEditingController();
 
-  bool place = false;
   bool placeError = false;
 
   DateTime currentDateTime = DateTime.now();
@@ -53,37 +51,37 @@ class _AddEditToolState extends State<AddEditTool> {
     boughtEditingController.text = widget.toolModel.bought;
     placeEditingController.text = widget.toolModel.storagePlace;
     borrowedByEditingController.text = widget.toolModel.borrowedBy;
+    borrowedByEditingController.text = widget.toolModel.borrowedBy;
     borrowedAtEditingController.text = widget.toolModel.borrowedAt;
 
-    setState(() {
-    });
+    setState(() {});
   }
 
   void validateForm() {
-    if (formKey.currentState!.validate() && place) {
-      addEditTool();
-    }
-
     setState(() {
       placeError = placeEditingController.text.isNotEmpty ? false : true;
     });
+
+    if (formKey.currentState!.validate() &&
+        placeEditingController.text.isNotEmpty) {
+      setState(() {
+        showLoading = true;
+      });
+      addEditTool();
+    }
   }
 
   Future<void> addEditTool() async {
     String uid = firebaseAuth.currentUser?.uid ?? "";
 
     if (uid.isNotEmpty) {
-      final tool = <String, dynamic>{
+      final tool = {
         "name": nameEditingController.text,
         "storage_place": placeEditingController.text,
         "borrowed_by": borrowedByEditingController.text,
         "borrowed_at": borrowedAtEditingController.text,
         "bought_at": boughtAtEditingController.text,
-        "bought": boughtEditingController.text,
-        "borrowed": (borrowedByEditingController.text.isNotEmpty ||
-                boughtAtEditingController.text.isNotEmpty)
-            ? false
-            : true
+        "bought": boughtEditingController.text
       };
 
       if (widget.edit) {
@@ -92,19 +90,14 @@ class _AddEditToolState extends State<AddEditTool> {
             .doc(uid)
             .collection("tools")
             .doc(widget.toolModel.id)
-            .set(tool, SetOptions(merge: true))
+            .update(tool)
             .then((value) {
-          widget.completed();
-
           Navigator.pop(context);
           Utils.showSnackBar(
               context, translate("add_edit_tool.successfully_updated"));
         }).catchError((error) {
-          debugPrint("Error: " + error);
-
           setState(() {
             showLoading = false;
-
             showError = true;
             errorMessage = translate("add_edit_tool.failed_to_update");
           });
@@ -122,7 +115,6 @@ class _AddEditToolState extends State<AddEditTool> {
         }).catchError((error) {
           setState(() {
             showLoading = false;
-
             showError = true;
             errorMessage = translate("add_edit_tool.failed_to_add");
           });
@@ -133,12 +125,13 @@ class _AddEditToolState extends State<AddEditTool> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+    return StreamBuilder<QuerySnapshot>(
       stream: firebaseFirestore
           .collection("users")
           .doc(firebaseAuth.currentUser?.uid)
+          .collection("storage_places")
           .snapshots(),
-      builder: (_, snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return Text(translate("message.error_loading"),
               textAlign: TextAlign.center,
@@ -150,8 +143,6 @@ class _AddEditToolState extends State<AddEditTool> {
         }
 
         if (snapshot.hasData) {
-          Map<String, dynamic>? data = snapshot.data!.data()!;
-
           return Container(
             color: Palette.surface,
             padding: const EdgeInsets.all(16),
@@ -314,16 +305,16 @@ class _AddEditToolState extends State<AddEditTool> {
                                 fontSize: 16,
                                 color: Palette.onSurface,
                               ),
-                              items: (data['places'] as List)
-                                  .map((item) => item as String)
-                                  .toList()
-                                  .map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                return DropdownMenuItem(
-                                  value: value,
+                              items: snapshot.data!.docs
+                                  .map((DocumentSnapshot document) {
+                                Map<String, dynamic> data =
+                                    document.data()! as Map<String, dynamic>;
+
+                                return DropdownMenuItem<String>(
+                                  value: data["title"],
                                   child: Row(
                                     children: [
-                                      Text(value),
+                                      Text(data["title"]),
                                     ],
                                   ),
                                 );
@@ -334,9 +325,7 @@ class _AddEditToolState extends State<AddEditTool> {
                                 setState(() {
                                   placeEditingController.text = value ?? "";
                                   if ((value ?? "").isNotEmpty) {
-                                    place = true;
                                     placeError = false;
-
                                     showError = false;
                                   }
                                 });
@@ -350,7 +339,7 @@ class _AddEditToolState extends State<AddEditTool> {
                         ? DefaultInput(
                             label: translate("add_edit_tool.borrowed_by"),
                             textEditingController: borrowedByEditingController,
-                            initialValue:  widget.toolModel.borrowedBy,
+                            initialValue: widget.toolModel.borrowedBy,
                             obscureText: false,
                             textInputType: TextInputType.text,
                             formFieldType: FormFieldType.text,

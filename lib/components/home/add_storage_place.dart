@@ -9,9 +9,7 @@ import '../../utils/utils.dart';
 import '../default_button.dart';
 
 class AddStoragePlace extends StatefulWidget {
-  final Function completed;
-
-  const AddStoragePlace({Key? key, required this.completed}) : super(key: key);
+  const AddStoragePlace({Key? key}) : super(key: key);
 
   @override
   State<AddStoragePlace> createState() => _AddStoragePlaceState();
@@ -35,21 +33,6 @@ class _AddStoragePlaceState extends State<AddStoragePlace> {
     super.initState();
     firebaseAuth = FirebaseAuth.instance;
     firebaseFirestore = FirebaseFirestore.instance;
-
-    getPlaces();
-  }
-
-  void getPlaces() async {
-    var docSnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(firebaseAuth.currentUser?.uid)
-        .get();
-    Map<String, dynamic> data = docSnapshot.data()!;
-
-    setState(() {
-      places = (data['places'] as List).map((item) => item as String).toList();
-      debugPrint(places.toString());
-    });
   }
 
   void validateForm() {
@@ -61,24 +44,28 @@ class _AddStoragePlaceState extends State<AddStoragePlace> {
     }
   }
 
-  void addPlace() {
+  Future<void> addPlace() async {
+    setState(() {
+      showLoading = true;
+    });
+
     String uid = firebaseAuth.currentUser?.uid ?? "";
 
     if (uid.isNotEmpty) {
-      places.add(placeEditingController.text);
+      final storagePlace = {"title": placeEditingController.text};
 
-      firebaseFirestore.collection("users").doc(uid).update({
-        "places": places,
-      }).then((value) {
-        widget.completed();
-
+      await firebaseFirestore
+          .collection("users")
+          .doc(uid)
+          .collection("storage_places")
+          .add(storagePlace)
+          .then((value) {
         Navigator.pop(context);
         Utils.showSnackBar(
             context, translate("add_storage_place.successfully_added"));
       }).catchError((error) {
         setState(() {
           showLoading = false;
-
           showError = true;
           errorMessage = translate("add_storage_place.failed_to_add");
         });

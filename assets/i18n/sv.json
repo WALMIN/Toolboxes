@@ -30,18 +30,33 @@
   },
   "home": {
     "welcome": "Välkommen,",
+    "sign_out": "Logga ut",
     "all": "Allt",
-    "no_tools": "Inga verktyg har lagts till ännu, lägg till ditt första nedan!",
+    "no_tools": "Inga verktyg har lagts till ännu.\nLägg till din första förvaringsplats\noch verktyg nedan!",
     "settings": "Inställningar",
     "add_storage_place": "Lägg till förvaringsplats",
     "add_tool": "Lägg till verktyg"
+  },
+  "sign_out": {
+    "title": "Logga ut",
+    "content": "Är du verkligen säker på att du vill logga ut?",
+    "negative_btn": "Avbryt",
+    "positive_btn": "Ja, logga ut"
   },
   "add_storage_place": {
     "title": "Lägg till förvaringsplats",
     "place": "Plats",
     "add": "Lägg till",
-    "successfully_added": "Lagringsplatsen har lagts till",
-    "failed_to_add": "Det gick inte att lägga till lagringsplatsen, försök igen senare"
+    "successfully_added": "Förvaringsplats har lagts till.",
+    "failed_to_add": "Det gick inte att lägga till förvaringsplats, försök igen senare!"
+  },
+  "delete_storage_place": {
+    "title": "Radera [NAME]",
+    "content": "Är du verkligen säker på att du vill ta bort den här förvaringsplatsen?",
+    "negative_btn": "Avbryt",
+    "positive_btn": "Ja, radera",
+    "successfully_deleted": "Förvaringsplatsen har raderats.",
+    "failed_to_delete": "Det gick inte att ta bort lagringsplatsen, försök igen senare!"
   },
   "add_edit_tool": {
     "add_tool": "Lägg till verktyg",
@@ -67,7 +82,8 @@
     "borrowed_at": "Lånades",
     "edit": "Redigera",
     "delete": "Radera",
-    "successfully_deleted": "Verktyget har raderats."
+    "successfully_deleted": "Verktyget har raderats.",
+    "failed_to_delete": "Det gick inte att ta bort verktyget, försök igen senare!"
   },
   "title_text_item": {
     "empty": "..."
@@ -85,9 +101,13 @@
     "title": "Ändra kontoinställningar",
     "first_name": "Förnamn",
     "email": "E-post",
+    "change_password": "Byt lösenord",
     "current_password": "Nuvarande lösenord",
     "new_password": "Nytt lösenord",
     "confirm_new_password": "Bekräfta nytt lösenord",
+    "password_does_not_match": "Nytt lösenord och bekräfta att det nya lösenordet inte matchar",
+    "weak_password": "Lösenordet är för svagt",
+    "wrong_password": "Fel lösenord",
     "save": "Spara",
     "successfully_updated": "Ditt konto har uppdaterats .",
     "failed_to_update": "Det gick inte att uppdatera ditt konto, försök igen senare!"

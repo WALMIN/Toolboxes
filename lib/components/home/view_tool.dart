@@ -12,8 +12,7 @@ import 'add_edit_tool.dart';
 
 class ViewTool extends StatefulWidget {
   final ToolModel toolModel;
-  final Function completed;
-  const ViewTool({Key? key, required this.toolModel, required this.completed}) : super(key: key);
+  const ViewTool({Key? key, required this.toolModel}) : super(key: key);
 
   @override
   State<ViewTool> createState() => _ViewToolState();
@@ -41,12 +40,13 @@ class _ViewToolState extends State<ViewTool> {
           .doc(widget.toolModel.id)
           .delete()
           .then((value) {
-            widget.completed();
-
         Navigator.pop(context);
         Utils.showSnackBar(
             context, translate("view_tool.successfully_deleted"));
-      }).catchError((error) {});
+      }).catchError((error) {
+        Navigator.pop(context);
+        Utils.showSnackBar(context, translate("view_tool.failed_to_delete"));
+      });
     }
   }
 
@@ -57,15 +57,12 @@ class _ViewToolState extends State<ViewTool> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Text(Utils.capitalize(widget.toolModel.name),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      color: Palette.onSurface,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24)),
-            ),
+            Text(Utils.capitalize(widget.toolModel.name),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    color: Palette.onSurface,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24)),
             Row(children: [
               TitleTextItem(
                   title: translate("view_tool.storage_place"),
@@ -114,10 +111,7 @@ class _ViewToolState extends State<ViewTool> {
                                               .bottom),
                                       child: AddEditTool(
                                           toolModel: widget.toolModel,
-                                          edit: true,
-                                      completed: () {
-                                        widget.completed();
-                                      })));
+                                          edit: true)));
                             },
                           );
                         }),

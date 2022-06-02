@@ -83,6 +83,7 @@ class Utils {
     }
   }
 
+  // Show a date picker dialog
   static Future<String> showDatePickerDialog(
       BuildContext context, DateTime dateTime) async {
     final DateTime? dateTimePicked = await showDatePicker(
@@ -99,5 +100,37 @@ class Utils {
           "${dateTimePicked.toLocal().year}-${dateTimePicked.toLocal().month < 10 ? "0" : ""}${dateTimePicked.toLocal().month}-${dateTimePicked.toLocal().day < 10 ? "0" : ""}${dateTimePicked.toLocal().day}";
     }
     return date;
+  }
+
+  // Show an alert dialog
+  static void showAlertDialog(
+      BuildContext context,
+      String title,
+      String content,
+      String negativeBtn,
+      String positiveBtn,
+      Function positiveBtnOnPressed) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: <Widget>[
+            TextButton(
+                child: Text(negativeBtn),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            TextButton(
+                child: Text(positiveBtn),
+                onPressed: () {
+                  positiveBtnOnPressed();
+                  Navigator.pop(context);
+                })
+          ],
+        );
+      },
+    );
   }
 }

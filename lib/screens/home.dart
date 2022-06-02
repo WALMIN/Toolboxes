@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:toolboxes/components/home/add_edit_tool.dart';
-import 'package:toolboxes/components/home/tool_item.dart';
 import 'package:toolboxes/models/tool_model.dart';
 import 'package:toolboxes/screens/settings.dart';
 
 import '../components/home/add_storage_place.dart';
+import '../components/home/tool_item.dart';
+import '../main.dart';
 import '../utils/palette.dart';
 import '../utils/utils.dart';
 
@@ -23,72 +24,35 @@ class _HomeState extends State<Home> {
   late FirebaseAuth firebaseAuth;
   late FirebaseFirestore firebaseFirestore;
 
-  bool loading = false;
-
   ValueNotifier<bool> isSpeedDialOpen = ValueNotifier(false);
 
-  int currentStoragePlace = 0;
-
-  List<String> storagePlaces = [];
-  List<ToolModel> allTools = [];
-  List<ToolModel> tools = [];
+  String currentStoragePlace = translate("home.all");
 
   @override
   void initState() {
     super.initState();
     firebaseAuth = FirebaseAuth.instance;
     firebaseFirestore = FirebaseFirestore.instance;
-
-    fetchStoragePlace();
-    fetchTools();
   }
 
-  Future<void> fetchStoragePlace() async {
-    storagePlaces.clear();
+  Future<void> removeStoragePlace(String id) async {
+    String uid = firebaseAuth.currentUser?.uid ?? "";
 
-    var data = await firebaseFirestore
-        .collection('users')
-        .doc(firebaseAuth.currentUser?.uid)
-        .get();
-    for (var place in data["places"]) {
-      storagePlaces.add(place);
+    if (uid.isNotEmpty) {
+      await firebaseFirestore
+          .collection("users")
+          .doc(uid)
+          .collection("storage_places")
+          .doc(id)
+          .delete()
+          .then((value) {
+        Utils.showSnackBar(
+            context, translate("delete_storage_place.successfully_deleted"));
+      }).catchError((error) {
+        Utils.showSnackBar(
+            context, translate("delete_storage_place.failed_to_delete"));
+      });
     }
-
-    storagePlaces.add(translate("home.all"));
-    storagePlaces.sort((a, b) => (a).compareTo(b));
-
-    setState(() {});
-  }
-
-  Future<void> fetchTools() async {
-    loading = true;
-    tools.clear();
-
-    QuerySnapshot querySnapshot = await firebaseFirestore
-        .collection('users')
-        .doc(firebaseAuth.currentUser?.uid)
-        .collection("tools")
-        .get();
-    for (var document in querySnapshot.docs) {
-      tools.add(
-        ToolModel(
-            id: document.id,
-            name: document["name"],
-            storagePlace: document["storage_place"],
-            borrowedBy: document["borrowed_by"],
-            borrowedAt: document["borrowed_at"],
-            bought: document["bought"],
-            boughtAt: document["bought_at"]),
-      );
-
-      loading = false;
-    }
-
-    tools.sort((a, b) => (a.name).compareTo(b.name));
-
-    allTools = tools;
-
-    setState(() {});
   }
 
   @override
@@ -97,139 +61,242 @@ class _HomeState extends State<Home> {
         appBar: Utils.appBar,
         backgroundColor: Palette.background,
         body: SafeArea(
-          child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-            stream: firebaseFirestore
-                .collection("users")
-                .doc(firebaseAuth.currentUser?.uid)
-                .snapshots(),
-            builder: (_, snapshot) {
-              if (snapshot.hasError) {
-                return Text(translate("message.error_loading"),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                        color: Palette.onBackground,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        overflow: TextOverflow.clip));
-              }
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                stream: firebaseFirestore
+                    .collection("users")
+                    .doc(firebaseAuth.currentUser?.uid)
+                    .snapshots(),
+                builder: (_, snapshot) {
+                  if (snapshot.hasData) {
+                    Map<String, dynamic>? data = snapshot.data!.data()!;
 
-              if (snapshot.hasData) {
-                Map<String, dynamic>? data = snapshot.data!.data()!;
-
-                return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                          padding: const EdgeInsets.only(
-                              top: 24, bottom: 18, left: 24, right: 24),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(translate("home.welcome"),
-                                    textAlign: TextAlign.left,
-                                    style: const TextStyle(
-                                        color: Palette.onBackground,
-                                        fontSize: 24)),
-                                Text(data['firstName'],
-                                    textAlign: TextAlign.left,
-                                    style: const TextStyle(
-                                        color: Palette.onBackground,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 24)),
-                              ])),
-                      Column(children: [
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(children: [
-                            for (var i = 0; i < storagePlaces.length; i++)
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  primary: Palette.background,
-                                  onPrimary: currentStoragePlace == i
-                                      ? Palette.primary
-                                      : Palette.onBackground,
-                                  textStyle: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: currentStoragePlace == i
-                                          ? FontWeight.bold
-                                          : FontWeight.normal),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    currentStoragePlace = i;
-
-                                    if (i > 0) {
-                                      tools = allTools
-                                          .where((tool) =>
-                                              tool.storagePlace.toLowerCase() ==
-                                              storagePlaces[i].toLowerCase())
-                                          .toList();
-                                    } else {
-                                      tools = allTools.toList();
-                                    }
-                                  });
-                                },
-                                child: Text(Utils.capitalize(storagePlaces[i])),
-                              ),
-                          ]),
-                        ),
-                        Expanded(
-                          child: loading
-                              ? Padding(
-                                  padding: EdgeInsets.only(
-                                      top: MediaQuery.of(context).size.height *
-                                          0.2),
-                                  child: const Center(
-                                      child: CircularProgressIndicator()))
-                              : (tools.isNotEmpty && allTools.isNotEmpty)
-                                  ? GridView.count(
-                                      shrinkWrap: true,
-                                      crossAxisCount: 2,
-                                      childAspectRatio: 8 / 5,
-                                      children:
-                                          List.generate(tools.length, (index) {
-                                        return ToolItem(
-                                            toolModel: tools[index],
-                                            completed: () {
-                                              fetchTools();
-                                            });
-                                      }),
-                                    )
-                                  : Padding(
-                                      padding: EdgeInsets.only(
-                                          top: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.2,
-                                          left: 12,
-                                          right: 12),
-                                      child: Center(
-                                        child: Column(children: [
-                                          const Icon(
-                                            Icons.handyman_outlined,
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                          top: 24, bottom: 12, left: 24, right: 24),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(translate("home.welcome"),
+                                        textAlign: TextAlign.left,
+                                        style: const TextStyle(
                                             color: Palette.onBackground,
-                                            size: 96,
-                                          ),
-                                          Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 32),
-                                              child: Text(
-                                                  translate("home.no_tools"),
-                                                  textAlign: TextAlign.center,
-                                                  style: const TextStyle(
-                                                      color: Palette.onSurface,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 20)))
-                                        ]),
-                                      ),
-                                    ),
+                                            fontSize: 24)),
+                                    Text(data["firstName"].toString(),
+                                        textAlign: TextAlign.left,
+                                        style: const TextStyle(
+                                            color: Palette.onBackground,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 24)),
+                                  ]),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.logout,
+                                  color: Palette.onBackground),
+                              tooltip: translate("home.sign_out"),
+                              onPressed: () {
+                                Utils.showAlertDialog(
+                                    context,
+                                    translate("sign_out.title"),
+                                    translate("sign_out.content"),
+                                    translate("sign_out.negative_btn"),
+                                    translate("sign_out.positive_btn"),
+                                    () async {
+                                  await firebaseAuth.signOut().then((result) {
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => const Main()),
+                                        (route) => false);
+                                  });
+                                });
+                              },
+                            ),
+                          ]),
+                    );
+                  }
+                  return Container();
+                },
+              ),
+              SizedBox(
+                height: 48,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Palette.background,
+                          onPrimary:
+                              currentStoragePlace == translate("home.all")
+                                  ? Palette.primary
+                                  : Palette.onBackground,
+                          textStyle: TextStyle(
+                              fontSize: 20,
+                              fontWeight:
+                                  currentStoragePlace == translate("home.all")
+                                      ? FontWeight.bold
+                                      : FontWeight.normal),
                         ),
-                      ]),
-                    ]);
-              }
-              return Container();
-            },
+                        onPressed: () {
+                          setState(() {
+                            currentStoragePlace = translate("home.all");
+                          });
+                        },
+                        child: Text(Utils.capitalize(translate("home.all"))),
+                      ),
+                      StreamBuilder<QuerySnapshot>(
+                          stream: firebaseFirestore
+                              .collection('users')
+                              .doc(firebaseAuth.currentUser?.uid)
+                              .collection("storage_places")
+                              .orderBy("title", descending: false)
+                              .snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.hasData) {
+                              return ListView(
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                children: snapshot.data!.docs
+                                    .map((DocumentSnapshot document) {
+                                  Map<String, dynamic> data =
+                                      document.data()! as Map<String, dynamic>;
+                                  return SizedBox(
+                                    height: 48,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        primary: Palette.background,
+                                        onPrimary: currentStoragePlace ==
+                                                data["title"].toString()
+                                            ? Palette.primary
+                                            : Palette.onBackground,
+                                        textStyle: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: currentStoragePlace ==
+                                                    data["title"].toString()
+                                                ? FontWeight.bold
+                                                : FontWeight.normal),
+                                      ),
+                                      onLongPress: () {
+                                        Utils.showAlertDialog(
+                                            context,
+                                            translate(
+                                                    "delete_storage_place.title")
+                                                .replaceAll("[NAME]",
+                                                    "\"${Utils.capitalize(data["title"])}\""),
+                                            translate(
+                                                "delete_storage_place.content"),
+                                            translate(
+                                                "delete_storage_place.negative_btn"),
+                                            translate(
+                                                "delete_storage_place.positive_btn"),
+                                            () {
+                                          removeStoragePlace(document.id);
+                                        });
+                                      },
+                                      onPressed: () {
+                                        setState(() {
+                                          currentStoragePlace =
+                                              data["title"].toString();
+                                        });
+                                      },
+                                      child:
+                                          Text(Utils.capitalize(data["title"])),
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                            }
+                            return Container();
+                          }),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                    stream: firebaseFirestore
+                        .collection('users')
+                        .doc(firebaseAuth.currentUser?.uid)
+                        .collection("tools")
+                        .orderBy("name", descending: false)
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return Text(translate("message.error_loading"),
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                color: Palette.onBackground,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.clip));
+                      }
+
+                      if (snapshot.hasData) {
+                        if (snapshot.data!.docs.isEmpty) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.height * 0.2,
+                                left: 24,
+                                right: 24),
+                            child: Center(
+                              child: Column(children: [
+                                const Icon(
+                                  Icons.handyman_outlined,
+                                  color: Palette.onBackground,
+                                  size: 64,
+                                ),
+                                Padding(
+                                    padding: const EdgeInsets.only(top: 24),
+                                    child: Text(translate("home.no_tools"),
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color: Palette.onSurface,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20)))
+                              ]),
+                            ),
+                          );
+                        } else {
+                          return GridView.count(
+                            shrinkWrap: true,
+                            crossAxisCount: 2,
+                            childAspectRatio: 8 / 5,
+                            children: snapshot.data!.docs
+                                .map((DocumentSnapshot document) {
+                              Map<String, dynamic> data =
+                                  document.data()! as Map<String, dynamic>;
+
+                              ToolItem item = ToolItem(
+                                  toolModel: ToolModel(
+                                      id: document.id,
+                                      name: data["name"],
+                                      storagePlace: data["storage_place"],
+                                      borrowedBy: data["borrowed_by"],
+                                      borrowedAt: data["borrowed_at"],
+                                      bought: data["bought"],
+                                      boughtAt: data["bought_at"]));
+
+                              return item;
+                            }).toList(),
+                          );
+                        }
+                      }
+
+                      return const Center(child: CircularProgressIndicator());
+                    }),
+              ),
+            ],
           ),
         ),
         floatingActionButton: floatingActionButton());
@@ -278,9 +345,7 @@ class _HomeState extends State<Home> {
                             padding: EdgeInsets.only(
                                 bottom:
                                     MediaQuery.of(context).viewInsets.bottom),
-                            child: AddStoragePlace(completed: () {
-                              fetchStoragePlace();
-                            })));
+                            child: const AddStoragePlace()));
                   },
                 );
               }),
@@ -297,23 +362,21 @@ class _HomeState extends State<Home> {
                   isScrollControlled: true,
                   builder: (BuildContext context) {
                     return SingleChildScrollView(
-                        child: Container(
-                            padding: EdgeInsets.only(
-                                bottom:
-                                    MediaQuery.of(context).viewInsets.bottom),
-                            child: AddEditTool(
-                                toolModel: ToolModel(
-                                    id: "",
-                                    name: "",
-                                    storagePlace: "",
-                                    borrowedBy: "",
-                                    borrowedAt: "",
-                                    bought: "",
-                                    boughtAt: ""),
-                                edit: false,
-                                completed: () {
-                                  fetchTools();
-                                })));
+                      child: Container(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                        child: AddEditTool(
+                            toolModel: ToolModel(
+                                id: "",
+                                name: "",
+                                storagePlace: "",
+                                borrowedBy: "",
+                                borrowedAt: "",
+                                bought: "",
+                                boughtAt: ""),
+                            edit: false),
+                      ),
+                    );
                   },
                 );
               })

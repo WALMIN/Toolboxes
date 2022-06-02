@@ -32,7 +32,7 @@ class _DefaultButtonState extends State<DefaultButton> {
                   primary: widget.backgroundColor,
                   onPrimary: widget.textColor,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(4),
                   )),
               child: Text(
                 widget.title,
