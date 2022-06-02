@@ -226,13 +226,13 @@ class _SignUpState extends State<SignUp> {
                                             });
                                           },
                                         ),
-                                        InkWell(
+                                        Flexible(child: InkWell(
                                             onTap: () {
                                               Utils.openURL(
                                                   "https://walmin.com/toolboxes/privacypolicy.html",
                                                   false);
                                             },
-                                            child: RichText(
+                                            child:  RichText(
                                                 textAlign: TextAlign.start,
                                                 text: TextSpan(
                                                     style: TextStyle(
@@ -254,7 +254,7 @@ class _SignUpState extends State<SignUp> {
                                                                   FontWeight
                                                                       .bold))
                                                     ]))),
-                                      ]),
+                                        )]),
                                   if (signUpError)
                                     Padding(
                                         padding: const EdgeInsets.only(top: 16),

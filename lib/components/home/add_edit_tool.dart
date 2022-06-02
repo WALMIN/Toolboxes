@@ -12,8 +12,9 @@ import '../default_input.dart';
 class AddEditTool extends StatefulWidget {
   final ToolModel toolModel;
   final bool edit;
+  final Function completed;
 
-  const AddEditTool({Key? key, required this.toolModel, required this.edit})
+  const AddEditTool({Key? key, required this.toolModel, required this.edit, required this.completed})
       : super(key: key);
 
   @override
@@ -53,6 +54,9 @@ class _AddEditToolState extends State<AddEditTool> {
     placeEditingController.text = widget.toolModel.storagePlace;
     borrowedByEditingController.text = widget.toolModel.borrowedBy;
     borrowedAtEditingController.text = widget.toolModel.borrowedAt;
+
+    setState(() {
+    });
   }
 
   void validateForm() {
@@ -90,10 +94,14 @@ class _AddEditToolState extends State<AddEditTool> {
             .doc(widget.toolModel.id)
             .set(tool, SetOptions(merge: true))
             .then((value) {
+          widget.completed();
+
           Navigator.pop(context);
           Utils.showSnackBar(
               context, translate("add_edit_tool.successfully_updated"));
         }).catchError((error) {
+          debugPrint("Error: " + error);
+
           setState(() {
             showLoading = false;
 
@@ -165,7 +173,7 @@ class _AddEditToolState extends State<AddEditTool> {
                     DefaultInput(
                         label: translate("add_edit_tool.name"),
                         textEditingController: nameEditingController,
-                        initialValue: "",
+                        initialValue: widget.toolModel.name,
                         obscureText: false,
                         textInputType: TextInputType.text,
                         formFieldType: FormFieldType.text,
@@ -178,7 +186,7 @@ class _AddEditToolState extends State<AddEditTool> {
                     DefaultInput(
                         label: translate("add_edit_tool.bought_at"),
                         textEditingController: boughtAtEditingController,
-                        initialValue: "",
+                        initialValue: widget.toolModel.boughtAt,
                         obscureText: false,
                         textInputType: TextInputType.text,
                         formFieldType: FormFieldType.text,
@@ -342,7 +350,7 @@ class _AddEditToolState extends State<AddEditTool> {
                         ? DefaultInput(
                             label: translate("add_edit_tool.borrowed_by"),
                             textEditingController: borrowedByEditingController,
-                            initialValue: "",
+                            initialValue:  widget.toolModel.borrowedBy,
                             obscureText: false,
                             textInputType: TextInputType.text,
                             formFieldType: FormFieldType.text,

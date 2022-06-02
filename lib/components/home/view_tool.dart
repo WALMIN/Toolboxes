@@ -12,7 +12,8 @@ import 'add_edit_tool.dart';
 
 class ViewTool extends StatefulWidget {
   final ToolModel toolModel;
-  const ViewTool({Key? key, required this.toolModel}) : super(key: key);
+  final Function completed;
+  const ViewTool({Key? key, required this.toolModel, required this.completed}) : super(key: key);
 
   @override
   State<ViewTool> createState() => _ViewToolState();
@@ -40,6 +41,8 @@ class _ViewToolState extends State<ViewTool> {
           .doc(widget.toolModel.id)
           .delete()
           .then((value) {
+            widget.completed();
+
         Navigator.pop(context);
         Utils.showSnackBar(
             context, translate("view_tool.successfully_deleted"));
@@ -111,7 +114,10 @@ class _ViewToolState extends State<ViewTool> {
                                               .bottom),
                                       child: AddEditTool(
                                           toolModel: widget.toolModel,
-                                          edit: true)));
+                                          edit: true,
+                                      completed: () {
+                                        widget.completed();
+                                      })));
                             },
                           );
                         }),

@@ -23,6 +23,8 @@ class _HomeState extends State<Home> {
   late FirebaseAuth firebaseAuth;
   late FirebaseFirestore firebaseFirestore;
 
+  bool loading = false;
+
   ValueNotifier<bool> isSpeedDialOpen = ValueNotifier(false);
 
   int currentStoragePlace = 0;
@@ -42,6 +44,8 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> fetchStoragePlace() async {
+    storagePlaces.clear();
+
     var data = await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth.currentUser?.uid)
@@ -52,9 +56,14 @@ class _HomeState extends State<Home> {
 
     storagePlaces.add(translate("home.all"));
     storagePlaces.sort((a, b) => (a).compareTo(b));
+
+    setState(() {});
   }
 
   Future<void> fetchTools() async {
+    loading = true;
+    tools.clear();
+
     QuerySnapshot querySnapshot = await firebaseFirestore
         .collection('users')
         .doc(firebaseAuth.currentUser?.uid)
@@ -71,10 +80,15 @@ class _HomeState extends State<Home> {
             bought: document["bought"],
             boughtAt: document["bought_at"]),
       );
+
+      loading = false;
     }
 
     tools.sort((a, b) => (a.name).compareTo(b.name));
+
     allTools = tools;
+
+    setState(() {});
   }
 
   @override
@@ -159,45 +173,62 @@ class _HomeState extends State<Home> {
                               ),
                           ]),
                         ),
-                        (tools.isNotEmpty && allTools.isNotEmpty)
-                            ? GridView.count(
-                                shrinkWrap: true,
-                                crossAxisCount: 2,
-                                childAspectRatio: 8 / 5,
-                                children: List.generate(tools.length, (index) {
-                                  return ToolItem(toolModel: tools[index]);
-                                }),
-                              )
-                            : Padding(
-                                padding: EdgeInsets.only(
-                                    top: MediaQuery.of(context).size.height *
-                                        0.2,
-                                    left: 12,
-                                    right: 12),
-                                child: Center(
-                                    child: Column(children: [
-                                  const Icon(
-                                    Icons.handyman_outlined,
-                                    color: Palette.onBackground,
-                                    size: 96,
-                                  ),
-                                  Padding(
-                                      padding: const EdgeInsets.only(top: 32),
-                                      child: Text(translate("home.no_tools"),
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                              color: Palette.onSurface,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20)))
-                                ])))
-                      ])
+                        Expanded(
+                          child: loading
+                              ? Padding(
+                                  padding: EdgeInsets.only(
+                                      top: MediaQuery.of(context).size.height *
+                                          0.2),
+                                  child: const Center(
+                                      child: CircularProgressIndicator()))
+                              : (tools.isNotEmpty && allTools.isNotEmpty)
+                                  ? GridView.count(
+                                      shrinkWrap: true,
+                                      crossAxisCount: 2,
+                                      childAspectRatio: 8 / 5,
+                                      children:
+                                          List.generate(tools.length, (index) {
+                                        return ToolItem(
+                                            toolModel: tools[index],
+                                            completed: () {
+                                              fetchTools();
+                                            });
+                                      }),
+                                    )
+                                  : Padding(
+                                      padding: EdgeInsets.only(
+                                          top: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.2,
+                                          left: 12,
+                                          right: 12),
+                                      child: Center(
+                                        child: Column(children: [
+                                          const Icon(
+                                            Icons.handyman_outlined,
+                                            color: Palette.onBackground,
+                                            size: 96,
+                                          ),
+                                          Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 32),
+                                              child: Text(
+                                                  translate("home.no_tools"),
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                      color: Palette.onSurface,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20)))
+                                        ]),
+                                      ),
+                                    ),
+                        ),
+                      ]),
                     ]);
               }
-
-              return Padding(
-                  padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.2),
-                  child: const Center(child: CircularProgressIndicator()));
+              return Container();
             },
           ),
         ),
@@ -247,7 +278,9 @@ class _HomeState extends State<Home> {
                             padding: EdgeInsets.only(
                                 bottom:
                                     MediaQuery.of(context).viewInsets.bottom),
-                            child: const AddStoragePlace()));
+                            child: AddStoragePlace(completed: () {
+                              fetchStoragePlace();
+                            })));
                   },
                 );
               }),
@@ -277,7 +310,10 @@ class _HomeState extends State<Home> {
                                     borrowedAt: "",
                                     bought: "",
                                     boughtAt: ""),
-                                edit: false)));
+                                edit: false,
+                                completed: () {
+                                  fetchTools();
+                                })));
                   },
                 );
               })

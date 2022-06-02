@@ -9,7 +9,9 @@ import '../../utils/utils.dart';
 import '../default_button.dart';
 
 class AddStoragePlace extends StatefulWidget {
-  const AddStoragePlace({Key? key}) : super(key: key);
+  final Function completed;
+
+  const AddStoragePlace({Key? key, required this.completed}) : super(key: key);
 
   @override
   State<AddStoragePlace> createState() => _AddStoragePlaceState();
@@ -68,6 +70,8 @@ class _AddStoragePlaceState extends State<AddStoragePlace> {
       firebaseFirestore.collection("users").doc(uid).update({
         "places": places,
       }).then((value) {
+        widget.completed();
+
         Navigator.pop(context);
         Utils.showSnackBar(
             context, translate("add_storage_place.successfully_added"));

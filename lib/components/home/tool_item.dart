@@ -7,7 +7,8 @@ import '../../utils/utils.dart';
 
 class ToolItem extends StatefulWidget {
   final ToolModel toolModel;
-  const ToolItem({Key? key, required this.toolModel}) : super(key: key);
+  final Function completed;
+  const ToolItem({Key? key, required this.toolModel, required this.completed}) : super(key: key);
 
   @override
   State<ToolItem> createState() => _ToolItemState();
@@ -26,7 +27,9 @@ class _ToolItemState extends State<ToolItem> {
                   child: Container(
                       padding: EdgeInsets.only(
                           bottom: MediaQuery.of(context).viewInsets.bottom),
-                      child: ViewTool(toolModel: widget.toolModel)));
+                      child: ViewTool(toolModel: widget.toolModel, completed: () {
+                        widget.completed();
+                      })));
             },
           );
         },
