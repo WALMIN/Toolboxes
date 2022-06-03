@@ -126,7 +126,7 @@ class _HomeState extends State<Home> {
                   return Container();
                 },
               ),
-              SizedBox(
+              /*SizedBox(
                 height: 48,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -221,7 +221,7 @@ class _HomeState extends State<Home> {
                     ],
                   ),
                 ),
-              ),
+              ),*/
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                     stream: firebaseFirestore
@@ -233,13 +233,21 @@ class _HomeState extends State<Home> {
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasError) {
-                        return Text(translate("message.error_loading"),
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height * 0.2,
+                              left: 24,
+                              right: 24),
+                          child: Text(
+                            translate("message.error_loading"),
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 color: Palette.onBackground,
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                overflow: TextOverflow.clip));
+                                overflow: TextOverflow.clip),
+                          ),
+                        );
                       }
 
                       if (snapshot.hasData) {
